@@ -1,0 +1,9 @@
+ru\minat0\tournaments\utility\TournamentsManager.class
+ru\minat0\tournaments\commands\Create.class
+ru\minat0\tournaments\abstracts\BaseCommand.class
+ru\minat0\tournaments\events\onJoin.class
+ru\minat0\tournaments\utility\CommandManager.class
+ru\minat0\tournaments\Tournaments.class
+ru\minat0\tournaments\commands\Reload.class
+ru\minat0\tournaments\utility\ConfigManager.class
+ru\minat0\tournaments\Main.class
