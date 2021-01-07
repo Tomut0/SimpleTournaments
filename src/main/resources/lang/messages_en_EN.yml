@@ -1,0 +1,2 @@
+tournament_exist_error: "The tournament's with this name already exist!"
+tournament_name_error: "Missing the tournament's name!"

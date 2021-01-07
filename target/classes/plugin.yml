@@ -1,7 +1,7 @@
 name: Tournaments
 author: Minat0_
 description: Plugin to create the tournaments on your server!
-version: 0.2
+version: 0.0.2-SNAPSHOT
 main: ru.minat0.tournaments.Main
 softdepend: [WorldEdit]
 commands:

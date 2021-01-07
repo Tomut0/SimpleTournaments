@@ -4,10 +4,25 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>Tournaments</groupId>
     <artifactId>Tournaments</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2-SNAPSHOT</version>
 
     <build>
+        <!-- Resources -->
+        <resources>
+            <resource>
+                <targetPath>.</targetPath>
+                <filtering>true</filtering>
+                <directory>${basedir}/src/main/resources</directory>
+                <includes>
+                    <include>plugin.yml</include>
+                    <include>config.yml</include>
+                </includes>
+            </resource>
+        </resources>
+
+        <!-- Plugins -->
         <plugins>
+            <!-- Compilation plugin -->
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
@@ -16,6 +31,7 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+            <!-- Reflections plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -37,35 +53,40 @@
                     </execution>
                 </executions>
             </plugin>
+
         </plugins>
     </build>
 
+    <!-- Repositories -->
     <repositories>
-        <!-- This adds the Spigot Maven repository to the build -->
+        <!-- Spigot repository  -->
         <repository>
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
-
+        <!-- WorldEdit repository  -->
         <repository>
             <id>worldedit-repo</id>
             <url>https://maven.enginehub.org/repo/</url>
         </repository>
     </repositories>
 
+    <!-- Dependencies -->
     <dependencies>
-        <!--This adds the Spigot API artifact to the build -->
+        <!--Spigot API-->
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
             <version>1.12.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+        <!--Reflections API-->
         <dependency>
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
             <version>0.9.9-RC1</version>
         </dependency>
+        <!--WorldEdit API-->
         <dependency>
             <groupId>com.sk89q.worldedit</groupId>
             <artifactId>worldedit-bukkit</artifactId>
