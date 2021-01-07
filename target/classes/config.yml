@@ -1,1 +1,17 @@
 # The tournament's config file
+DataSource:
+  # What type of database do you want to use?
+  # Available values: SQLITE, MYSQL.
+  backend: SQLITE
+  # Database host address
+  mySQLHost: localhost
+  # Database port
+  mySQLPort: '3306'
+   # Username to connect to the MySQL database
+  mySQLUsername: ''
+  # Password to connect to the MySQL database
+  mySQLPassword: ''
+  # Database Name
+  mySQLDatabase: ''
+#The plugin's messages language. Available values: en, ru
+lang:

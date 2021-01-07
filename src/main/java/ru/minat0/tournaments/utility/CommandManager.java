@@ -11,6 +11,8 @@ import org.reflections.Reflections;
 import ru.minat0.tournaments.abstracts.BaseCommand;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -21,7 +23,7 @@ import java.util.stream.Collectors;
 public class CommandManager implements CommandExecutor, TabCompleter {
 
     Reflections reflections = new Reflections("ru.minat0.tournaments.commands");
-    Set<Class<? extends BaseCommand>> commands = reflections.getSubTypesOf(BaseCommand.class);
+    Set<Class<? extends BaseCommand>> commands = reflections.getSubTypesOf(BaseCommand.class).stream().sorted(Comparator.comparing(Class::getSimpleName)).collect(Collectors.toCollection(LinkedHashSet::new));
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -41,19 +43,21 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
                                 Bukkit.getLogger().log(Level.SEVERE, "Error with basic commands", e);
                             }
+
+                            return true;
                         } else {
                             Pattern pattern = Pattern.compile(args[0], Pattern.CASE_INSENSITIVE);
                             Matcher matcher = pattern.matcher(cmd.getSimpleName());
 
                             if (matcher.find()) {
                                 p.sendMessage("§cОшибка: §7может, вы имели ввиду: §a/tournaments " + cmd.getSimpleName().toLowerCase());
-                            } else {
-                                p.sendMessage("§cОшибка: такой команды не существует!");
                             }
-
-                            return false;
                         }
                     }
+
+                    p.sendMessage("§cОшибка: такой команды не существует!");
+
+                    return false;
                 } else {
                     if (p.hasPermission("tournaments.help")) {
                         p.sendMessage("<< Tournaments Help >>");
@@ -73,6 +77,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                                 Bukkit.getLogger().log(Level.SEVERE, "Error with tournaments help", e);
                             }
                         }
+
                         return true;
                     } else p.sendMessage(ChatColor.DARK_RED + "У вас недостаточно прав, чтобы использовать эту команду!");
                 }

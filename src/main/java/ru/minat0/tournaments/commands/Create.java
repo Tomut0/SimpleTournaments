@@ -38,6 +38,9 @@ public class Create extends BaseCommand {
         if (name.length() > 0) {
             Tournaments tournament = new Tournaments();
             if (!TournamentsManager.containsByCleanName(name)) {
+                for (Tournaments tm : TournamentsManager.tournamentsList) {
+                    p.sendMessage("Args: " + name + " / CleanName: " + tm.getCleanName() + "/ ColourName" + tm.getName());
+                }
 
                 tournament.setName(name);
                 p.sendMessage("§aТурнир " + ChatColor.translateAlternateColorCodes('&', tournament.getName()) + "§a был успешно создан.");

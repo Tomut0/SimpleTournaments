@@ -1,6 +1,5 @@
 package ru.minat0.tournaments.utility;
 
-import org.bukkit.ChatColor;
 import ru.minat0.tournaments.Tournaments;
 
 import java.util.HashSet;
@@ -13,6 +12,6 @@ public class TournamentsManager {
     }
 
     public static boolean containsByCleanName(String name) {
-        return tournamentsList.stream().anyMatch(tournament -> tournament.getCleanName().equalsIgnoreCase(ChatColor.stripColor(name)));
+        return tournamentsList.stream().anyMatch(tournament -> tournament.getCleanName().equalsIgnoreCase(name.replaceAll("&[0-f]", "")));
     }
 }
