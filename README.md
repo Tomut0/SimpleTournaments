@@ -3,7 +3,7 @@ The spigot 1.12.2 plugin on the tournaments.
 
 WORK IN PROGRESS:
 * The tournament setup and possibility to editing.
-* Fully customisation kits, game modes, rules, awards, time setup.
+* Fully customisation kits, game modes, rules, awards, time and location setup.
 * MySQL and SQLITE support.
 
 Commands:
