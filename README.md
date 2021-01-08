@@ -14,3 +14,4 @@ Commands:
 | ------------- |:-------------:| -----:|
 | /tournaments create [name]      | tournaments.create | Creates the tournament |
 | /tournaments reload      | tournaments.reload      |   Reloads the plugin's configuration file. |
+| /tournaments setlang [lang_code]     | tournaments.setlang      |   Sets the plugin's language. |
