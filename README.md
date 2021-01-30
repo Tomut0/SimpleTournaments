@@ -6,6 +6,7 @@ WORK IN PROGRESS:
 * Scoreboard in battle, leaderboard by count of winning tournaments, placeholders
 * Auto-broadcast your turnaments
 * Fully customisation kits, game modes, rules, awards, time and location setup.
+* Possibility to create your own ranks, change tournaments points (TP).
 * Pay for participation (Vault requirement)
 * MySQL and SQLITE support.
 
