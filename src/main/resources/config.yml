@@ -1,3 +1,6 @@
+# Should plugin show the additional info?
+debug: false
+
 # The tournament's config file
 DataSource:
   # What type of database do you want to use?
@@ -21,4 +24,4 @@ lang: en_EN
 Auto_Broadcast:
   Enable: true # true - enable broadcasting, false - disable.
   Interval: 5 # in minutes
-  Message: '&8[&aTournaments&8]&f The {name} will begin in {time} minutes! To join: &e/tournaments join'
+  Message: '&8[&aSimpleTournaments&8]&f The {name} will begin in {time} minutes! To join: &e/tournaments join'

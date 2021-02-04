@@ -1,4 +1,4 @@
-package ru.minat0.tournaments.abstracts;
+package ru.minat0.simpletournaments.abstracts;
 
 import org.bukkit.entity.Player;
 

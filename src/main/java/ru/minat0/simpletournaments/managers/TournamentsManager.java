@@ -1,6 +1,6 @@
-package ru.minat0.tournaments.utility;
+package ru.minat0.simpletournaments.managers;
 
-import ru.minat0.tournaments.Tournaments;
+import ru.minat0.simpletournaments.Tournaments;
 
 import java.util.HashSet;
 

@@ -1,9 +1,9 @@
-package ru.minat0.tournaments.utility;
+package ru.minat0.simpletournaments.managers;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-import ru.minat0.tournaments.Main;
+import ru.minat0.simpletournaments.SimpleTournaments;
 
 import java.io.File;
 
@@ -65,7 +65,7 @@ public class ConfigManager {
         }
         file.getParentFile().mkdirs();
         if (resource) {
-            Main.getPlugin(Main.class).saveResource(name, false);
+            SimpleTournaments.getPlugin(SimpleTournaments.class).saveResource(name, false);
         } else {
             try {
                 file.createNewFile();

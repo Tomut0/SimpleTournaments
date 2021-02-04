@@ -1,11 +1,10 @@
-package ru.minat0.tournaments.commands;
+package ru.minat0.simpletournaments.commands;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import ru.minat0.tournaments.Main;
-import ru.minat0.tournaments.Tournaments;
-import ru.minat0.tournaments.abstracts.BaseCommand;
-import ru.minat0.tournaments.utility.TournamentsManager;
+import ru.minat0.simpletournaments.Tournaments;
+import ru.minat0.simpletournaments.abstracts.BaseCommand;
+import ru.minat0.simpletournaments.managers.TournamentsManager;
 
 import java.util.Arrays;
 
@@ -41,7 +40,7 @@ public class Create extends BaseCommand {
 
                 TournamentsManager.tournamentsList.add(tournament);
 
-            } else p.sendMessage(Main.getInstance().getLocationManager().locale.getString("tournament_exist_error"));
+            } else p.sendMessage("123");
         } else p.sendMessage(ChatColor.DARK_RED + "Отсутствует наименование турнира!");
     }
 }
