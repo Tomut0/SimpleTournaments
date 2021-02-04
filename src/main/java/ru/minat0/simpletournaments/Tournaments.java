@@ -1,4 +1,4 @@
-package ru.minat0.tournaments;
+package ru.minat0.simpletournaments;
 
 import com.sk89q.worldedit.bukkit.selections.Selection;
 import org.bukkit.ChatColor;

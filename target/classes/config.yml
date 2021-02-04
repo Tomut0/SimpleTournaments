@@ -13,5 +13,12 @@ DataSource:
   mySQLPassword: ''
   # Database Name
   mySQLDatabase: ''
-#The plugin's messages language. Available values: en, ru
-lang:
+
+#The plugin's messages language. Available values: en_EN, ru_RU
+lang: en_EN
+
+#Broadcast your tournaments
+Auto_Broadcast:
+  Enable: true # true - enable broadcasting, false - disable.
+  Interval: 5 # in minutes
+  Message: '&8[&aTournaments&8]&f The {name} will begin in {time} minutes! To join: &e/tournaments join'
