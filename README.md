@@ -1,4 +1,4 @@
-# Tournaments
+# SimpleTournaments
 The spigot 1.12.2 plugin on the tournaments.
 
 WORK IN PROGRESS:
