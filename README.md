@@ -6,7 +6,8 @@ WORK IN PROGRESS:
 * Scoreboard in battle, leaderboard by count of winning tournaments, placeholders
 * Auto-broadcast your turnaments
 * Parallel and linear type of tournaments
-* Fully customisation kits, game modes, rules, awards, time and location setup
+* Fully customisation kits, rules, awards, time and location setup
+* Blacklist and whitelist
 * GUI Calendar with tournaments
 * Possibility to create your own ranks, change tournaments points (TP)
 * Pay for participation (Vault requirement)
