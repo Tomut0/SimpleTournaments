@@ -1,13 +1,13 @@
-name: Tournaments
+name: SimpleTournaments
 author: Minat0_
 description: Plugin to create the tournaments on your server!
 version: ${project.version}
-main: ru.minat0.tournaments.Main
+main: ru.minat0.simpletournaments.SimpleTournaments
 softdepend: [WorldEdit]
 commands:
   tournaments:
     description: List with main commands.
-    aliases: [tournament, tm]
+    aliases: [tournament, tournaments, st]
 permissions:
   tournaments.help:
     description: Allows you to get plugin's help
