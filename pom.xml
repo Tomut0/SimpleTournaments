@@ -6,7 +6,17 @@
     <artifactId>SimpleTournaments</artifactId>
     <version>0.0.3-SNAPSHOT</version>
 
+    <properties>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <test.server>D:\Server-1.12.2</test.server>
+    </properties>
+
     <build>
+        <finalName>${project.name}</finalName>
+
         <!-- Resources -->
         <resources>
             <resource>
@@ -14,9 +24,9 @@
                 <filtering>true</filtering>
                 <directory>${basedir}/src/main/resources</directory>
                 <includes>
-                    <include>plugin.yml</include>
+                    <include>*.properties</include>
                     <include>config.yml</include>
-                    <include>*.yml</include>
+                    <include>plugin.yml</include>
                 </includes>
             </resource>
         </resources>
@@ -28,20 +38,32 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
                 </configuration>
             </plugin>
-            <!-- Reflections plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <outputDirectory>${test.server}\plugins</outputDirectory>
+                </configuration>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>3.2.1</version>
                 <configuration>
                     <relocations>
                         <relocation>
-                            <pattern>org.reflections</pattern>
-                            <shadedPattern>ru.minat0.simpletournaments</shadedPattern>
+                            <pattern>co.aikar</pattern>
+                            <shadedPattern>ru.minat0.simpletournaments.lib.aikar</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>com.zaxxer</pattern>
+                            <shadedPattern>ru.minat0.simpletournaments.lib.hikari</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
@@ -69,6 +91,16 @@
             <id>worldedit-repo</id>
             <url>https://maven.enginehub.org/repo/</url>
         </repository>
+        <!-- PlaceholderAPI repository -->
+        <repository>
+            <id>placeholderapi</id>
+            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+        </repository>
+        <!-- Aikar repository -->
+        <repository>
+            <id>aikar</id>
+            <url>https://repo.aikar.co/content/groups/aikar/</url>
+        </repository>
     </repositories>
 
     <!-- Dependencies -->
@@ -80,12 +112,6 @@
             <version>1.12.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-        <!--Reflections API-->
-        <dependency>
-            <groupId>org.reflections</groupId>
-            <artifactId>reflections</artifactId>
-            <version>0.9.9-RC1</version>
-        </dependency>
         <!--WorldEdit API-->
         <dependency>
             <groupId>com.sk89q.worldedit</groupId>
@@ -93,10 +119,32 @@
             <version>6.1.4-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+        <!-- HikariCP -->
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>5.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- PlaceholderAPI API-->
+        <dependency>
+            <groupId>me.clip</groupId>
+            <artifactId>placeholderapi</artifactId>
+            <version>2.10.9</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- ACF API -->
+        <dependency>
+            <groupId>co.aikar</groupId>
+            <artifactId>acf-paper</artifactId>
+            <version>0.5.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- Jetbrains Annotations -->
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>RELEASE</version>
+            <version>23.0.0</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
