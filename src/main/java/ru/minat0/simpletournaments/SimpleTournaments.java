@@ -1,60 +1,78 @@
 package ru.minat0.simpletournaments;
 
-import org.bukkit.Bukkit;
+import co.aikar.commands.PaperCommandManager;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
-import org.reflections.Reflections;
-import ru.minat0.simpletournaments.managers.CommandManager;
+import ru.minat0.simpletournaments.commands.GeneralCommands;
 import ru.minat0.simpletournaments.managers.ConfigManager;
 import ru.minat0.simpletournaments.managers.DatabaseManager;
-import ru.minat0.simpletournaments.utility.ErrorsUtil;
+import ru.minat0.simpletournaments.utility.Helper;
 
 import java.util.Set;
+
+import static org.bukkit.Bukkit.getPluginManager;
+import static ru.minat0.simpletournaments.managers.DatabaseManager.DBType;
 
 public class SimpleTournaments extends JavaPlugin {
     private static SimpleTournaments instance;
 
-    private static ConfigManager config;
-    private static final DatabaseManager db = new DatabaseManager();
+    private static ConfigManager configManager;
+    private static DatabaseManager databaseManager;
+    private static PaperCommandManager commandManager;
 
-    @Override
-    public void onEnable() {
-        instance = this;
+    public static PaperCommandManager getCommandManager() {
+        return commandManager;
+    }
 
-        config = new ConfigManager(this, this.getDataFolder(), "config", true, true);
+    public static FileConfiguration getConfiguration() {
+        return configManager.getConfig();
+    }
 
-        registerEvents();
-        getCommand("tournaments").setExecutor(new CommandManager());
+    public static ConfigManager getConfigurationManager() {
+        return configManager;
     }
 
     public static SimpleTournaments getInstance() {
         return instance;
     }
 
+    @Override
+    public void onEnable() {
+        instance = this;
+
+        registerManagers();
+        registerDependencies();
+        registerEvents();
+
+        commandManager.registerCommand(new GeneralCommands(), true);
+        commandManager.getLocales();
+
+        commandManager.enableUnstableAPI("help");
+    }
+
+    private void registerManagers() {
+        configManager = new ConfigManager(this, this.getDataFolder(), "config", true, true);
+        configManager.reloadConfig();
+        commandManager = new PaperCommandManager(this);
+
+        DBType dbType = DBType.valueOf(getConfiguration().getString("DataSource.backend"));
+        databaseManager = new DatabaseManager(this, configManager.getConfig(), dbType);
+    }
+
     private void registerEvents() {
-        Reflections reflections = new Reflections("ru.minat0.tournaments.events");
-        Set<Class<? extends Listener>> listeners = reflections.getSubTypesOf(Listener.class);
-        Bukkit.getLogger().info(listeners.toString());
-        for (Class<? extends Listener> c : listeners) {
+        Set<Class<? extends Listener>> events = Helper.getSubTypesOf("ru.minat0.simpletournaments.events", Listener.class);
+        for (Class<? extends Listener> c : events) {
             try {
-                getServer().getPluginManager().registerEvents(c.getDeclaredConstructor().newInstance(), this);
+                getPluginManager().registerEvents(c.getDeclaredConstructor().newInstance(), this);
             } catch (Exception ex) {
-                ErrorsUtil.error("Error registering event: " + ex.getMessage());
+                getLogger().severe("Error registering event: " + ex.getMessage());
             }
         }
     }
 
-    public static ConfigManager getConfiguration() {
-        return config;
+    private void registerDependencies() {
+        commandManager.registerDependency(ConfigManager.class, configManager);
+        commandManager.registerDependency(DatabaseManager.class, databaseManager);
     }
-
-    @NotNull
-    public static DatabaseManager getDB() {
-        return db;
-    }
-
-    /*public LocaleManager getLocationManager() {
-        return locationManager;
-    }*/
 }
