@@ -1,23 +1,40 @@
 package ru.minat0.simpletournaments.managers;
 
+import com.zaxxer.hikari.HikariDataSource;
 import org.bukkit.configuration.file.FileConfiguration;
-import ru.minat0.simpletournaments.SimpleTournaments;
-import ru.minat0.simpletournaments.utility.ErrorsUtil;
+import org.bukkit.plugin.java.JavaPlugin;
+import ru.minat0.simpletournaments.utility.Log;
 
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class DatabaseManager {
-    final String dbName = "SimpleTournaments";
-    private Connection connection;
+import static java.util.logging.Level.SEVERE;
+import static ru.minat0.simpletournaments.managers.DatabaseManager.DBType.SQLITE;
 
-    public void setup() {
-        try {
-            Statement statement = getConnection().createStatement();
+/**
+ * @author Minat0_
+ * I'd seen example from RoinujNosde DatabaseManager's class.
+ * https://github.com/RoinujNosde/TitansBattle/blob/master/src/main/java/me/roinujnosde/titansbattle/managers/DatabaseManager.java
+ */
+public class DatabaseManager {
+    private final JavaPlugin plugin;
+    private final FileConfiguration config;
+
+    private HikariDataSource dataSource;
+
+    public DatabaseManager(JavaPlugin plugin, FileConfiguration config, DBType type) {
+        this.plugin = plugin;
+        this.config = config;
+        this.dataSource = getDataSource(type);
+        setup();
+    }
+
+    @SuppressWarnings("SqlNoDataSourceInspection")
+    private void setup() {
+        try (Connection connection = getConnection(); Statement statement = connection.createStatement()) {
             statement.execute("CREATE TABLE IF NOT EXISTS tournaments_players "
                     + "(id INTEGER PRIMARY KEY,"
                     + "uuid varchar(255) NOT NULL,"
@@ -27,62 +44,65 @@ public class DatabaseManager {
                     + "defeats int NOT NULL,"
                     + "locale varchar(10) NOT NULL);"
             );
-            statement.execute("CREATE TABLE IF NOT EXISTS tournaments_winners "
-                    + "(date varchar(10) NOT NULL,"
-                    + "tournament varchar(255) NOT NULL,"
-                    + "winner varchar(255) NOT NULL);"
-            );
         } catch (SQLException ex) {
-            ErrorsUtil.error("Error while creating the tables: " + ex.getMessage());
+            Log.getLogger().log(SEVERE, "Error while creating the tables!", ex);
         }
     }
 
-    private Connection getConnection() throws SQLException {
-        if (connection == null || connection.isClosed()) {
-            initialize();
-        }
+    private HikariDataSource getDataSource(DBType type) {
+        dataSource = new HikariDataSource();
+        dataSource.setMaximumPoolSize(20);
+        dataSource.addDataSourceProperty("cachePrepStmts", "true");
+        dataSource.addDataSourceProperty("prepStmtCacheSize", "250");
+        dataSource.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
 
-        return connection;
+        switch (type) {
+            case SQLITE:
+                File SQLFile = createFileIfNotExist();
+                dataSource.setDriverClassName("org.sqlite.JDBC");
+                dataSource.setJdbcUrl("jdbc:sqlite:" + SQLFile);
+                return dataSource;
+            case MYSQL:
+                String database = config.getString("DataSource.mySQLDatabase");
+                String hostname = config.getString("DataSource.mySQLHost");
+                String port = config.getString("DataSource.mySQLPort");
+                String username = config.getString("DataSource.mySQLUsername");
+                String password = config.getString("DataSource.mySQLPassword");
+                dataSource.setUsername(username);
+                dataSource.setPassword(password);
+                dataSource.setJdbcUrl("jdbc:mysql://" + hostname + ":" + port + "/" + database + "?useSSL=false&characterEncoding=utf-8&autoReconnect=true");
+                return dataSource;
+            default:
+                Log.getLogger().warning("Unable to get type of database connection, please check \"DataSource.backend\" in config.yml! Using SQLite instead...");
+                return getDataSource(SQLITE);
+        }
     }
 
-    private void initialize() throws SQLException {
-        FileConfiguration config = SimpleTournaments.getConfiguration().getConfig();
-        String dbType = config.getString("DataSource.backend", "SQLITE");
+    public Connection getConnection() throws SQLException {
+        return dataSource.getConnection();
+    }
 
-        if (dbType.equalsIgnoreCase("MYSQL")) {
+    public HikariDataSource getDataSource() {
+        return dataSource;
+    }
 
-            String hostname = config.getString("DataSource.SQLHost");
-            String port = config.getString("DataSource.SQLPort");
-            String database = config.getString("DataSource.SQLDatabase");
-            String username = config.getString("DataSource.SQLUsername");
-            String password = config.getString("DataSource.SQLPassword");
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    private File createFileIfNotExist() {
+        File sqlFile = new File(plugin.getDataFolder(), plugin.getDescription().getName() + ".db");
 
+        if (!sqlFile.exists()) {
             try {
-                Class.forName("com.mysql.jdbc.Driver");
-                connection = DriverManager.getConnection("jdbc:mysql://" + hostname + ":" + port + "/" + database +
-                        "?useSSL=false", username, password);
-            } catch (ClassNotFoundException ex) {
-                ErrorsUtil.error("MySQL driver not found!");
-            }
-        } else {
-            ErrorsUtil.error("Error while getting the type of DB, please check \"DataSource.backend\" in config.yml! Using SQLite instead...");
-            File sqlFile = new File(SimpleTournaments.getInstance().getDataFolder(), dbName + ".db");
-
-            if (!sqlFile.exists()) {
-                try {
-                    sqlFile.createNewFile();
-                } catch (IOException ex) {
-                    ErrorsUtil.error("File write error: " + dbName + ".db");
-                }
-            }
-
-            try {
-                Class.forName("org.sqlite.JDBC");
-                connection = DriverManager.getConnection("jdbc:sqlite:" + sqlFile);
-            } catch (ClassNotFoundException | SQLException ex) {
-                ErrorsUtil.error("SQLite driver not found!");
+                sqlFile.createNewFile();
+                return sqlFile;
+            } catch (IOException ex) {
+                Log.getLogger().log(SEVERE, "File writing error: {0}.db", plugin.getDescription().getName());
             }
         }
 
+        return sqlFile;
+    }
+
+    public enum DBType {
+        SQLITE, MYSQL
     }
 }
